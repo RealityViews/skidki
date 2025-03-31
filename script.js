@@ -9,20 +9,20 @@ async function loadAndProcessExcel(fileUrl, cafeName) {
 
     // Обработка данных в зависимости от формата файла
     return data.map(row => {
-      if (cafeName === "Кафе 1") {
+      if (cafeName === "Мельница") {
         // Формат: м0001.Еремин Михаил	20
         const rawName = row[0]?.trim();
         const id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер
         const fullName = rawName.split(".")[1]?.trim(); // Извлекаем фамилию
         const discount = row[1] || "Размер скидки не указан";
         return { cafe: cafeName, id, fullName, discount };
-      } else if (cafeName === "Кафе 2") {
+      } else if (cafeName === "Бочка") {
         // Формат: Наименование	Код	Процент скидки
         const fullName = row[0]?.trim();
         const id = row[1]?.trim();
         const discount = row[2] || "Размер скидки не указан";
         return { cafe: cafeName, id, fullName, discount };
-      } else if (cafeName === "Кафе 3") {
+      } else if (cafeName === "Буфет") {
         // Формат: 5.007.ЧУРАКОВА ОЛЬГА ЮРЬЕВНА	20%
         const rawName = row[0]?.trim();
         const id = rawName.split(".").pop()?.replace(/\D/g, ""); // Берём всё после последней точки
