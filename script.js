@@ -14,9 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
       data = data
         .filter(row => row[0]) // Убираем строки без фамилии
         .map(row => {
-          const fullName = row[0].split(".")[1]?.trim(); // Извлекаем фамилию после точки
+          const rawName = row[0].trim(); // Исходная строка (например, "м0001.Еремин Михаил")
+          const fullName = rawName.split(".")[1]?.trim(); // Извлекаем фамилию после точки
           const discount = row[1] ? row[1] : "Размер скидки не указан"; // Если скидка пустая, заменяем текстом
-          return [fullName, discount];
+          const id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер (например, "0001")
+          return { id, fullName, discount };
         });
 
       console.log("Обработанные данные:", data);
@@ -33,16 +35,19 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Поиск по частичному совпадению
-    const matches = data.filter(row => row[0]?.toLowerCase().includes(input));
+    // Поиск по фамилии или номеру
+    const matches = data.filter(item => 
+      item.fullName?.toLowerCase().includes(input) || // Поиск по фамилии
+      item.id?.includes(input)                       // Поиск по номеру
+    );
 
     if (matches.length > 0) {
       // Отображаем все совпадения
       resultDiv.innerHTML = matches
-        .map(match => `Фамилия: ${match[0]}<br>Скидка: ${match[1]}<hr>`)
+        .map(match => `Фамилия: ${match.fullName}<br>Скидка: ${match.discount}<hr>`)
         .join("");
     } else {
-      resultDiv.innerHTML = "Фамилия не найдена.";
+      resultDiv.innerHTML = "Ничего не найдено.";
     }
   };
 });
