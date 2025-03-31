@@ -30,13 +30,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
           return { cafe: cafeName, id, fullName, discount };
         } else if (cafeName === "Буфет") {
-          // Формат: 5.007.ЧУРАКОВА ОЛЬГА ЮРЬЕВНА	20%
+          // Формат: 5.007.ЧУРАКОВА ОЛЬГА ЮРЬЕВНА	20
           const rawName = row[0]?.trim();
           const id = rawName.split(".").pop()?.replace(/\D/g, ""); // Берём всё после последней точки
           const fullName = rawName.split(".").slice(1).join(".").trim(); // Извлекаем фамилию после первой точки
 
-          // Преобразуем значение в строку, если это число, и удаляем знак %
-          const discount = typeof row[1] === "string" ? row[1].replace(/%/g, "") : row[1]?.toString() || "Размер скидки не указан";
+          // Обрабатываем второй столбец (скидка)
+          let discount = row[1];
+          if (typeof discount === "number") {
+            discount = discount.toString(); // Преобразуем число в строку
+          } else if (typeof discount === "string") {
+            discount = discount.replace(/%/g, ""); // Удаляем знак %, если он есть
+          } else {
+            discount = "Размер скидки не указан"; // Если значение пустое или другого типа
+          }
 
           return { cafe: cafeName, id, fullName, discount };
         }
