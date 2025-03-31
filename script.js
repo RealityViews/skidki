@@ -18,33 +18,21 @@ document.addEventListener("DOMContentLoaded", function () {
           const rawName = row[0]?.trim();
           const id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер
           const fullName = rawName.split(".")[1]?.trim(); // Извлекаем фамилию
-          const discount = typeof row[1] === "string" ? row[1].trim() : row[1]?.toString() || "Размер скидки не указан";
+          const discount = typeof row[1] === "number" ? row[1].toString() : row[1]?.trim() || "Размер скидки не указан";
           return { cafe: cafeName, id, fullName, discount };
         } else if (cafeName === "Бочка") {
-          // Формат: Наименование	Код	Процент скидки
-          const fullName = row[0]?.trim();
-          const id = row[1]?.toString().trim(); // Преобразуем в строку, если это число
-
-          // Проверяем, является ли значение строки string перед вызовом .trim
-          const discount = typeof row[2] === "string" ? row[2].trim() : row[2]?.toString() || "Размер скидки не указан";
-
+          // Формат: 1.095.ЛАГУНОВ В.В.ГЛАЗУНОВ С.Л.	20
+          const rawName = row[0]?.trim();
+          const id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер
+          const fullName = rawName.split(".")[1]?.trim(); // Извлекаем фамилию
+          const discount = typeof row[1] === "number" ? row[1].toString() : row[1]?.trim() || "Размер скидки не указан";
           return { cafe: cafeName, id, fullName, discount };
         } else if (cafeName === "Буфет") {
-          // Формат: 5.007.ЧУРАКОВА ОЛЬГА ЮРЬЕВНА	20
+          // Формат: 5.1134.ВЕДЕРНИКОВ АЛЕКСЕЙ ЮРЬЕВИЧ	10
           const rawName = row[0]?.trim();
-          const id = rawName.split(".").pop()?.replace(/\D/g, ""); // Берём всё после последней точки
-          const fullName = rawName.split(".").slice(1).join(".").trim(); // Извлекаем фамилию после первой точки
-
-          // Обрабатываем второй столбец (скидка)
-          let discount = row[1];
-          if (typeof discount === "number") {
-            discount = discount.toString(); // Преобразуем число в строку
-          } else if (typeof discount === "string") {
-            discount = discount.replace(/%/g, ""); // Удаляем знак %, если он есть
-          } else {
-            discount = "Размер скидки не указан"; // Если значение пустое или другого типа
-          }
-
+          const id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер
+          const fullName = rawName.split(".")[1]?.trim(); // Извлекаем фамилию
+          const discount = typeof row[1] === "number" ? row[1].toString() : row[1]?.trim() || "Размер скидки не указан";
           return { cafe: cafeName, id, fullName, discount };
         }
       });
@@ -74,10 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        // Поиск по номеру или фамилии
+        // Поиск по фамилии или номеру
         const matches = allData.filter(item =>
-          item.id?.includes(input) || // Поиск по номеру
-          item.fullName?.toLowerCase().includes(input) // Поиск по фамилии
+          item.fullName?.toLowerCase().includes(input) || // Поиск по фамилии
+          item.id?.toLowerCase().includes(input) // Поиск по номеру
         );
 
         if (matches.length > 0) {
