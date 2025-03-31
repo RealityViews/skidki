@@ -16,8 +16,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!row[0]) return null; // Пропускаем пустые строки
 
         const rawName = row[0]?.trim();
-        const id = rawName.split(".")[1]?.replace(/\D/g, ""); // Извлекаем номер скидки после первой точки
-        const fullName = rawName.split(".").slice(2).join(".").trim(); // Извлекаем фамилию после второй точки
+        let id, fullName;
+
+        if (cafeName === "Мельница") {
+          // Формат: м0001.Еремин Михаил	20
+          id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер скидки
+          fullName = rawName.split(".").slice(1).join(".").trim(); // Извлекаем фамилию
+        } else {
+          // Формат: 5.2371.ЖЕГАНОВА ЯНА ЕВГЕНЬЕВНА	10
+          id = rawName.split(".")[1]?.replace(/\D/g, ""); // Извлекаем номер скидки после первой точки
+          fullName = rawName.split(".").slice(2).join(".").trim(); // Извлекаем фамилию после второй точки
+        }
+
         const discount = typeof row[1] === "number" ? row[1].toString() : row[1]?.trim() || "Размер скидки не указан";
 
         return { cafe: cafeName, id, fullName, discount };
