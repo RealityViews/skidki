@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const rawName = row[0].trim(); // Исходная строка (например, "м0001.Еремин Михаил")
           const fullName = rawName.split(".")[1]?.trim(); // Извлекаем фамилию после точки
           const discount = row[1] ? row[1] : "Размер скидки не указан"; // Если скидка пустая, заменяем текстом
-          const id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер (например, "0001")
+          const id = rawName.match(/\d+/)?.[0] || ""; // Извлекаем номер
           return { id, fullName, discount };
         });
 
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Функция поиска
   window.searchDiscount = function () {
-    const input = document.getElementById("searchInput").value.trim().toLowerCase();
+    const input = document.getElementById("searchInput").value.trim();
     const resultDiv = document.getElementById("result");
 
     if (!input) {
@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Поиск по фамилии или номеру
     const matches = data.filter(item => 
-      item.fullName?.toLowerCase().includes(input) || // Поиск по фамилии
-      item.id?.includes(input)                       // Поиск по номеру
+      item.fullName?.toLowerCase().includes(input.toLowerCase()) || // Поиск по фамилии
+      item.id === input                                            // Поиск по номеру
     );
 
     if (matches.length > 0) {
