@@ -18,20 +18,26 @@ document.addEventListener("DOMContentLoaded", function () {
           const rawName = row[0]?.trim();
           const id = rawName.split(".")[0]?.replace(/\D/g, ""); // Извлекаем номер
           const fullName = rawName.split(".")[1]?.trim(); // Извлекаем фамилию
-          const discount = row[1] || "Размер скидки не указан";
+          const discount = typeof row[1] === "string" ? row[1].trim() : row[1]?.toString() || "Размер скидки не указан";
           return { cafe: cafeName, id, fullName, discount };
         } else if (cafeName === "Бочка") {
           // Формат: Наименование	Код	Процент скидки
           const fullName = row[0]?.trim();
-          const id = row[1]?.trim();
-          const discount = row[2] || "Размер скидки не указан";
+          const id = row[1]?.toString().trim(); // Преобразуем в строку, если это число
+
+          // Проверяем, является ли значение строки string перед вызовом .trim
+          const discount = typeof row[2] === "string" ? row[2].trim() : row[2]?.toString() || "Размер скидки не указан";
+
           return { cafe: cafeName, id, fullName, discount };
         } else if (cafeName === "Буфет") {
           // Формат: 5.007.ЧУРАКОВА ОЛЬГА ЮРЬЕВНА	20%
           const rawName = row[0]?.trim();
           const id = rawName.split(".").pop()?.replace(/\D/g, ""); // Берём всё после последней точки
           const fullName = rawName.split(".").slice(1).join(".").trim(); // Извлекаем фамилию после первой точки
-          const discount = row[1]?.replace(/%/g, "") || "Размер скидки не указан"; // Удаляем % из скидки
+
+          // Преобразуем значение в строку, если это число, и удаляем знак %
+          const discount = typeof row[1] === "string" ? row[1].replace(/%/g, "") : row[1]?.toString() || "Размер скидки не указан";
+
           return { cafe: cafeName, id, fullName, discount };
         }
       });
